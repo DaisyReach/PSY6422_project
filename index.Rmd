@@ -1,0 +1,255 @@
+---
+title: "UK Energy Production by Source from 1985-2021 "
+author: "Daisy Reach"
+date: "27/04/2022"
+output:
+  html_document:
+    theme: lumen
+    toc: true
+    number_sections: true
+runtime: shiny
+---
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# need to load in packages to document can run 
+library(tidyverse)
+library(reshape2)
+library(ggplot2)
+library(shiny)
+library(gganimate)
+library(gifski)
+library(here)
+
+```
+
+
+
+
+
+# Data Origins
+
+
+## Data Source
+
+For this analysis the data was sourced from [Our World Data](https://ourworldindata.org/grapher/electricity-production-by-source?country=~GBR)
+
+This data was collected from 3 different sources:
+<ul>
+<li>[BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html)</li>
+<li> [Ember Global Electricity Review](https://ember-climate.org/insights/research/global-electricity-review-2022/) </li>
+<li> [Ember European Electricity Review](https://ember-climate.org/insights/research/european-electricity-review-2022/) </li>
+</ul>
+
+##  Contents of the data 
+The data contains variables on world production of energy from:
+<ul>
+<li> Coal </li>
+<li> Gas </li>
+<li> Nuclear </li>
+<li> Hydro </li>
+<li> Renewable </li>
+<li> Solar </li>
+<li> Oil </li>
+<li> Wind </li>
+</ul>
+
+
+# Research Question
+
+This visualisation aims to address whether:
+<ul>
+<li> There has been a change in the amount of energy different energy sources have produced in the uk between 1985 and 2021 </li>
+<ul>
+<li> if there has been an increase in energy production from renewable sources in the uk between 1985 and 2021 </li>
+<li> if there has been a decrease in energy production from non renewable sources in the uk between 1985-2021 </li>
+</ul>
+
+
+
+
+# Data Preperation 
+
+
+## Set up 
+```{r message=FALSE,warning=FALSE}
+
+# all relevant packages need to be loaded
+library(tidyverse)
+library(reshape2)
+library(ggplot2)
+library(shiny)
+library(gganimate)
+library(gifski)
+library(here)
+
+#set working directory to git hub repository
+setwd("U:/Repositories/PSY6422_project")
+
+# load in dataframe and assign it to a new name
+df <- read.csv(here("electricity-production-by-source.csv"))
+
+
+```
+
+
+
+## Cleaning the data
+
+The raw data contains measures of energy sources from the entire world and long column names
+
+as you can see this looks very messy 
+```{r echo=FALSE}
+head(df)
+```
+
+
+However as I only want to visualise energy production in the UK
+
+I first have to remove any irrelevant data and tidy up the data so that it is more readable
+```{r}
+
+# removes irrelevant columns 
+df <- subset(df, select = -Code) # removes 'Code' Column
+df <- subset(df, select = -Entity) # removes 'Entity' Column
+
+# removes irrelevant rows
+df <- df[-c(6000:6382), ] # removes all rows after data from uk
+df <- df[-c(1:5962), ] # removes all rows from before uk
+
+# renames columns
+names(df) <- c("Year", "Coal", "Gas", "Nuclear", "Hydro", "Renewable", "Solar", "Oil", "Wind")
+```
+
+The data looks much better now 
+```{r}
+head(df)
+```
+
+
+
+
+
+# Visualisations 
+
+
+## Time Series Line Graph
+I wanted to create a line graph to shows trends of energy production by source type from 1985 to 2021 in the uk 
+
+### Re-formatting the data
+To be able to plot this data on a line graph it needs to be converted from its current wide format to a long format
+
+```{r}
+
+# uses the melt function from the reshape2 package, with the year as the id variable 
+new_df <- melt(df, id.vars = c("Year")) 
+
+```
+
+
+### Plotting the line graph
+
+```{r warning=FALSE, message=FALSE}
+# using ggplot to create a basic line graph that plots production of energy by source from 1985-2021
+
+p <- ggplot(data = new_df,
+            mapping = aes(x = new_df$Year,
+                          y = new_df$value,
+                          color = new_df$variable))
+ p + geom_line(size = 1) + ggtitle("Energy Produced in the UK from 1985-2021 by source") +
+  xlab("Year") + ylab("Amount of Energy Produced (TWH)") +
+  guides(color = guide_legend(title = "Energy Source"))
+```
+
+
+
+
+## Animated Time-Series Line Graph 
+
+```{r warning=FALSE, message=FALSE}
+
+# to create an animated time series line graph, I used the same basic format as before but used the transition_reveal function from the gganimate package to progressively render the plot
+
+ p + geom_line(size = 1) +
+  ggtitle("Energy Produced in the UK from 1985-2021 by source") +
+  xlab("Year") + ylab("Amount of Energy Produced (TWH)") +
+  guides(color = guide_legend(title = "Energy Source")) + transition_reveal(new_df$Year)
+
+```
+
+
+
+## Interactive Bar Chart 
+I wanted to further this visualisation by creating an interactive bar chart that shows the energy production by source depending on the year the user selected
+
+### Re-formatting the data
+To be able to plot the data as a bar chart depending on the year selected the data again needs to be re-formatted
+
+Data needs to be set up with the year as the column and the energy source as the rows
+
+```{r}
+
+# transposes data frame so that the years are now the columns and assign's it to a new name
+df2 <-as.data.frame(t(df))
+
+#removes year row
+df2 <- df2[-1,] 
+
+# renames columns to the year
+colnames(df2) <- c("1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")
+
+#adds a new column of the energy sources
+ Source <- c("Coal", "Gas", "Nuclear", "Hydro", "Renewable", "Solar", "Oil", "Wind" )
+ 
+#binds the new column to the data frame
+df2 <- cbind(Source, df2)
+
+#removes row names
+rownames(df2) <- c()
+
+```
+
+### Plotting the interactive bar graph 
+
+```{r}
+
+#makes the user interface of what year the user inputs 
+ui <- fluidPage(
+  sliderInput("year", "Select Year:",
+    min = 1985, max = 2021, value = 1999
+  ),
+  plotOutput("distplot")
+)
+
+#this instructs the server what to display
+server <- shinyServer(function(input,output){
+  output$distplot <- renderPlot({
+    ggplot(df2, aes(x=Source, y=get(as.character(input$year)), fill=Source)) +
+  geom_bar(stat = "identity") + labs(x="Energy Source", y="Amount of Energy Produced (TWH)", title = "Energy Produced in the UK from 1985-2021 by source")
+    })
+  })
+shinyApp(ui, server)
+
+# it works!!!
+```
+
+
+
+
+
+# summary
+My visualisations did provide answers to my research questions. There are apparent changes in the amount of energy different sources produced from 1985 to 2021, with coal showing a massive decrease from 177.16 TWH in 1985, to 5.98 TWH in 2021. As well as Wind, Solar and other Renewable energy sources showing a general increase in recent years. 
+
+## What I have learnt
+
+During this project I've learnt how process data to plot it in different ways, how to create basic visualisations as well as more advanced interactive plots with user interface and animated plots.
+This project has provided me with transferable skills that I will definitely be using in future coursework and my dissertation, as well as potential future careers. 
+
+
+## What I would do next 
+
+If I had more time I'd of liked to look at energy produced by the different sources from different countries and be able to develop an interactive plot that allows you to compare on the same graph different energy source productions from different countries
+
+ 
+
+
