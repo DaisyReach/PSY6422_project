@@ -159,6 +159,9 @@ p <- ggplot(data = new_df,
  p + geom_line(size = 1) + ggtitle("Energy Produced in the UK from 1985-2021 by source") +
   xlab("Year") + ylab("Amount of Energy Produced (TWH)") +
   guides(color = guide_legend(title = "Energy Source"))
+
+ 
+ ggsave(here("figs","line_plot.png"))
 ```
 
 
@@ -174,6 +177,8 @@ p <- ggplot(data = new_df,
   ggtitle("Energy Produced in the UK from 1985-2021 by source") +
   xlab("Year") + ylab("Amount of Energy Produced (TWH)") +
   guides(color = guide_legend(title = "Energy Source")) + transition_reveal(new_df$Year)
+
+anim_save(here("figs","animated_live_plot.gif"))
 
 ```
 
@@ -211,7 +216,7 @@ rownames(df2) <- c()
 
 ### Plotting the interactive bar graph 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 #makes the user interface of what year the user inputs 
 ui <- fluidPage(
@@ -229,6 +234,8 @@ server <- shinyServer(function(input,output){
     })
   })
 shinyApp(ui, server)
+
+ggsave(here("figs","interactive_bar_plot.png"))
 
 # it works!!!
 ```
