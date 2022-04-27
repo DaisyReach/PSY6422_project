@@ -87,7 +87,7 @@ library(here)
 setwd("U:/Repositories/PSY6422_project")
 
 # load in dataframe and assign it to a new name
-df <- read.csv(here("electricity-production-by-source.csv"))
+df <- read.csv(here("data", "electricity-production-by-source.csv"))
 
 
 ```
@@ -160,8 +160,8 @@ p <- ggplot(data = new_df,
   xlab("Year") + ylab("Amount of Energy Produced (TWH)") +
   guides(color = guide_legend(title = "Energy Source"))
 
- 
- ggsave(here("figs","line_plot.png"))
+# saves plot as image
+ggsave(here("figs","line_plot.png"))
 ```
 
 
@@ -178,6 +178,7 @@ p <- ggplot(data = new_df,
   xlab("Year") + ylab("Amount of Energy Produced (TWH)") +
   guides(color = guide_legend(title = "Energy Source")) + transition_reveal(new_df$Year)
 
+#saves animated plot as a gif
 anim_save(here("figs","animated_live_plot.gif"))
 
 ```
@@ -235,9 +236,9 @@ server <- shinyServer(function(input,output){
   })
 shinyApp(ui, server)
 
+# saves interactive plot as image
 ggsave(here("figs","interactive_bar_plot.png"))
 
-# it works!!!
 ```
 
 
