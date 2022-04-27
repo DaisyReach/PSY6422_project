@@ -1,6 +1,6 @@
 ---
 title: "UK Energy Production by Source from 1985-2021 "
-author: "Daisy Reach"
+author: "210177835"
 date: "27/04/2022"
 output:
   html_document:
@@ -234,10 +234,11 @@ server <- shinyServer(function(input,output){
   geom_bar(stat = "identity") + labs(x="Energy Source", y="Amount of Energy Produced (TWH)", title = "Energy Produced in the UK from 1985-2021 by source")
     })
   })
-shinyApp(ui, server)
 
-# saves interactive plot as image
-ggsave(here("figs","interactive_bar_plot.png"))
+
+shinyApp(ui, server)
+ 
+
 
 ```
 
@@ -248,16 +249,16 @@ ggsave(here("figs","interactive_bar_plot.png"))
 # summary
 My visualisations did provide answers to my research questions. There are apparent changes in the amount of energy different sources produced from 1985 to 2021, with coal showing a massive decrease from 177.16 TWH in 1985, to 5.98 TWH in 2021. As well as Wind, Solar and other Renewable energy sources showing a general increase in recent years. 
 
-## What I have learnt
+### What I have learnt
 
 During this project I've learnt how process data to plot it in different ways, how to create basic visualisations as well as more advanced interactive plots with user interface and animated plots.
 This project has provided me with transferable skills that I will definitely be using in future coursework and my dissertation, as well as potential future careers. 
 
 
-## What I would do next 
+### What I would do next 
 
 If I had more time I'd of liked to look at energy produced by the different sources from different countries and be able to develop an interactive plot that allows you to compare on the same graph different energy source productions from different countries
 
- 
 
+The git hub repository for this project can be found [here](https://github.com/DaisyReach/PSY6422_project)
 
