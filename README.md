@@ -4,5 +4,6 @@ This project visualises electricity production from different energy sources in 
 
 This project includes contents on Data Origins, Research Question, Data Preperation, Visualisations and a Summary. You can navigate through these by the table of contents.
 
-Under visualisations you can see an animated time series graph of Electricty Production by the differnt sources over time and an interactive bar graph showing amount of electricity produced by source depending on the year you wish to look at.
+Under visualisations you can see an animated time series graph of Electricty Production by the different sources over time and an interactive bar graph showing amount of electricity produced by source depending on the year you wish to look at.
 
+you can view published project here (https://daisyreach.github.io/PSY6422_project/)
