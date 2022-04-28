@@ -1,0 +1,22 @@
+CodeBook 
+
+Data used in this project shows electricity production by source globally.
+
+The data came from 3 sources:
+BP Statistical Review of World Energy
+Ember Global Electricity Review
+Ember European Electricity Review
+
+The data had measures of energy production by source:
+Coal
+Gas
+Nuclear
+Hydro
+Renewable
+Solar
+Oil
+Wind
+
+These are continuous factors, measured in teraWatts (TWh)
+
+
